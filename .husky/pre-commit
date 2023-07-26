@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "**** Running ESLint... ****  🔍"
+npm run lint-staged
+echo "SUCCESS: all checks passed ✅"
