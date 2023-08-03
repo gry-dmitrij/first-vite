@@ -7,7 +7,7 @@ import useContextMenu from "./components/ContextMenu/hooks/useContextMenu.ts";
 
 function App() {
   const [count, setCount] = useState(0)
-  const {visible, show} = useContextMenu()
+  const {visible, show, contextMenuProps} = useContextMenu()
 
   useEffect(() => {
     const contextHandler = (e: MouseEvent) => {
@@ -36,7 +36,7 @@ function App() {
         <button onClick={(e) => {
           e.stopPropagation()
           setCount((count) => count + 1);
-          show()
+          show(e)
         }}>
           count is {count}
         </button>
@@ -47,7 +47,7 @@ function App() {
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
-      {visible && <ContextMenu>
+      {visible && <ContextMenu {...contextMenuProps}>
         <p style={{color: '#000'}} onClick={() => console.log('context click')}>Контекстное меню</p>
       </ContextMenu>}
     </>

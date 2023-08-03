@@ -12,6 +12,7 @@ module.exports = {
   ignorePatterns: ['dist', '.eslintrc.cjs'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
+    tsconfigRootDir: __dirname,
     ecmaVersion: 'latest',
     sourceType: 'module',
     project: ['./tsconfig.json', './tsconfig.node.json'],
@@ -22,6 +23,7 @@ module.exports = {
       'warn',
       {allowConstantExport: true},
     ],
-    '@typescript-eslint/no-unused-vars': 'warn'
+    '@typescript-eslint/no-unused-vars': 'warn',
+    '@typescript-eslint/prefer-nullish-coalescing': 'off'
   },
 }
