@@ -47,9 +47,9 @@ function App() {
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
-      {visible && <ContextMenu {...contextMenuProps}>
+      {visible && <ContextMenu {...contextMenuProps} menuOffset={5} margin={30}>
         <p style={{color: '#000'}} onClick={() => console.log('context click')}>Контекстное меню</p>
-      </ContextMenu>}
+      </ContextMenu >}
     </>
   )
 }

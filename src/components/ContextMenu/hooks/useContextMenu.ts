@@ -9,7 +9,7 @@ const useContextMenu = () => {
     console.log('show: ', e)
     setContextMenuProps({
       element: e.target instanceof Element ? e.target : null,
-      offset: {
+      elementOffset: {
         x: e.offsetX,
         y: e.offsetY
       }

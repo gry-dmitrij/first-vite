@@ -1,10 +1,12 @@
 import styles from './ContextMenu.module.scss'
-import {PropsWithChildren, useCallback, useEffect, useState} from "react";
+import {LegacyRef, PropsWithChildren, useCallback, useEffect, useRef, useState} from "react";
 import {offsetLeft, offsetTop} from "../../utils/layout.ts";
 
 interface ContextMenuProps extends PropsWithChildren {
   element?: Element | null,
-  offset?: Coords
+  elementOffset?: number | Coords
+  menuOffset?: number | Coords
+  margin?: number | Coords
 }
 
 interface Coords {
@@ -12,25 +14,49 @@ interface Coords {
   y: number
 }
 
-const offsetInit = {x: 0, y: 0}
+interface GetCoordProps {
+  coord: number
+  screenSize: number
+  elementSize: number
+  offset?: number
+  margin?: number
+}
+const getCoord = ({coord, screenSize, elementSize, offset = 0, margin = 0}: GetCoordProps) => {
+  let newCoord = coord + offset
+  if (elementSize + 2 * margin > screenSize) {
+    newCoord = margin
+  } else if (newCoord + elementSize > screenSize - margin) {
+    if (coord - offset - elementSize < margin) {
+      newCoord = Math.floor(screenSize / 2 - elementSize / 2)
+    } else {
+      newCoord = coord - offset - elementSize
+    }
+  }
+  return newCoord
+}
 
 const ContextMenu = (
   {
     element,
-    offset = offsetInit,
+    elementOffset = 0,
+    menuOffset = 0,
+    margin = 0,
     children
   }: ContextMenuProps) => {
   const [coords, setCoords] = useState<Coords>({
-    x: offsetLeft(element || undefined) + offset.x,
-    y: offsetTop(element || undefined) + offset.y
+    x: offsetLeft(element || undefined) + (typeof elementOffset === 'number' ? elementOffset : elementOffset.x),
+    y: offsetTop(element || undefined) + (typeof elementOffset === 'number' ? elementOffset : elementOffset.y)
   })
+  const [visible, setVisible] = useState(false)
+  const container = useRef<HTMLDivElement>()
 
   const changeCoords = useCallback(() => {
+    setVisible(false)
     setCoords({
-      x: offsetLeft(element || undefined) + offset.x,
-      y: offsetTop(element || undefined) + offset.y
+      x: offsetLeft(element || undefined) + (typeof elementOffset === 'number' ? elementOffset : elementOffset.x),
+      y: offsetTop(element || undefined) + (typeof elementOffset === 'number' ? elementOffset : elementOffset.y)
     })
-  }, [element, offset])
+  }, [element, elementOffset])
 
   useEffect(() => {
     changeCoords()
@@ -44,9 +70,51 @@ const ContextMenu = (
     }
   }, [changeCoords])
 
+  const checkAndChangeCoords = useCallback(() => {
+    const el = container.current
+    if (!el) {
+      return
+    }
+    const x = getCoord({
+      coord: coords.x,
+      screenSize:  window.innerWidth || document.documentElement.clientWidth,
+      elementSize: el.clientWidth,
+      offset: typeof menuOffset === 'number' ? menuOffset : menuOffset.x,
+      margin: typeof margin === 'number' ? margin : margin.x
+    })
+    const y = getCoord({
+      coord: coords.y,
+      screenSize:  window.innerHeight || document.documentElement.clientHeight,
+      elementSize: el.clientHeight,
+      offset: typeof menuOffset === 'number' ? menuOffset : menuOffset.y,
+      margin: typeof margin === 'number' ? margin : margin.y
+    })
+    if (x !== coords.x || y !== coords.y) {
+      setCoords({
+        x,
+        y
+      })
+    }
+    setVisible(true)
+  }, [coords, margin, menuOffset])
+
+  const ref: LegacyRef<HTMLDivElement> = (el) => {
+    console.log(el)
+    if (!el || visible) {
+      return
+    }
+    container.current = el
+    checkAndChangeCoords()
+  }
+
   return <div
+    ref={ref}
     className={styles.box}
-    style={{left: coords.x, top: coords.y}}
+    style={
+    {
+      opacity: visible ? 1 : 0,
+      left: visible ? coords.x : 0,
+      top: visible ? coords.y : 0}}
   >
     {children}
   </div>

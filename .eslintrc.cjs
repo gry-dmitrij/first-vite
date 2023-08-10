@@ -25,4 +25,9 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': 'warn',
     '@typescript-eslint/prefer-nullish-coalescing': 'off'
   },
+  settings: {
+    react: {
+      version: 'detect'
+    }
+  }
 }
