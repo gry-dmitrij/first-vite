@@ -1,6 +1,9 @@
 import styles from './ContextMenu.module.scss'
-import {LegacyRef, PropsWithChildren, useCallback, useEffect, useRef, useState} from "react";
+import {LegacyRef, PropsWithChildren, useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {offsetLeft, offsetTop} from "../../utils/layout.ts";
+import ReactDOM from "react-dom";
+
+const PORTAL_ID = 'modal-container'
 
 interface ContextMenuProps extends PropsWithChildren {
   element?: Element | null,
@@ -48,7 +51,16 @@ const ContextMenu = (
     y: offsetTop(element || undefined) + (typeof elementOffset === 'number' ? elementOffset : elementOffset.y)
   })
   const [visible, setVisible] = useState(false)
+  const containerElement = useMemo(
+    () => document.getElementById(PORTAL_ID),
+    [],
+  );
   const container = useRef<HTMLDivElement>()
+
+
+  if (!containerElement) {
+    throw new Error(`Portal "${PORTAL_ID}" not found`)
+  }
 
   const changeCoords = useCallback(() => {
     setVisible(false)
@@ -107,7 +119,7 @@ const ContextMenu = (
     checkAndChangeCoords()
   }
 
-  return <div
+  return ReactDOM.createPortal(<div
     ref={ref}
     className={styles.box}
     style={
@@ -117,7 +129,7 @@ const ContextMenu = (
       top: visible ? coords.y : 0}}
   >
     {children}
-  </div>
+  </div>, containerElement)
 }
 
 export default ContextMenu

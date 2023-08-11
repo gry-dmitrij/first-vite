@@ -1,17 +1,25 @@
 import {ComponentProps, useCallback, useEffect, useState} from "react";
 import ContextMenu from "../ContextMenu.tsx";
+import {offsetLeft, offsetTop} from "../../../utils/layout.ts";
 
 const useContextMenu = () => {
   const [visible, setVisible] = useState(false)
   const [contextMenuProps, setContextMenuProps] = useState<Partial<ComponentProps<typeof ContextMenu>>>({})
 
   const show = useCallback((e: MouseEvent) => {
-    console.log('show: ', e)
+    let offsetY = 0
+    let offsetX = 0
+    if (e.target instanceof Element) {
+      const target = e.target
+      offsetY = e.pageY - offsetTop(target) - document.documentElement.scrollTop
+      offsetX = e.pageX - offsetLeft(target) - document.documentElement.scrollLeft
+    }
+
     setContextMenuProps({
       element: e.target instanceof Element ? e.target : null,
       elementOffset: {
-        x: e.offsetX,
-        y: e.offsetY
+        x: offsetX,
+        y: offsetY
       }
     })
     setVisible(true)

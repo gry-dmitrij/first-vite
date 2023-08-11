@@ -36,7 +36,8 @@ function App() {
         <button onClick={(e) => {
           e.stopPropagation()
           setCount((count) => count + 1);
-          show(e)
+          console.log('mouse event')
+          show(e.nativeEvent)
         }}>
           count is {count}
         </button>
@@ -47,9 +48,31 @@ function App() {
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p>
-      {visible && <ContextMenu {...contextMenuProps} menuOffset={5} margin={30}>
-        <p style={{color: '#000'}} onClick={() => console.log('context click')}>Контекстное меню</p>
-      </ContextMenu >}
+      <p style={{
+        width: 300,
+        height: 500,
+        position: 'absolute',
+        top: 200,
+        left: 0,
+        background: '#aaa',
+        color: '#000',
+        overflow: "hidden",
+        transform: 'translateX(100px)'
+      }}>абслютное позиционирование
+
+        {visible && <ContextMenu {...contextMenuProps} menuOffset={0} margin={30}>
+          <p style={{color: '#000'}} onClick={() => console.log('context click')}>Контекстное меню</p>
+        </ContextMenu>}
+      </p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A ad architecto aut culpa cum dolore eaque eos esse fugit iure laboriosam porro possimus quidem ratione, recusandae reprehenderit rerum similique suscipit?</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A ad architecto aut culpa cum dolore eaque eos esse fugit iure laboriosam porro possimus quidem ratione, recusandae reprehenderit rerum similique suscipit?</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A ad architecto aut culpa cum dolore eaque eos esse fugit iure laboriosam porro possimus quidem ratione, recusandae reprehenderit rerum similique suscipit?</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A ad architecto aut culpa cum dolore eaque eos esse fugit iure laboriosam porro possimus quidem ratione, recusandae reprehenderit rerum similique suscipit?</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A ad architecto aut culpa cum dolore eaque eos esse fugit iure laboriosam porro possimus quidem ratione, recusandae reprehenderit rerum similique suscipit?</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A ad architecto aut culpa cum dolore eaque eos esse fugit iure laboriosam porro possimus quidem ratione, recusandae reprehenderit rerum similique suscipit?</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A ad architecto aut culpa cum dolore eaque eos esse fugit iure laboriosam porro possimus quidem ratione, recusandae reprehenderit rerum similique suscipit?</p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A ad architecto aut culpa cum dolore eaque eos esse fugit iure laboriosam porro possimus quidem ratione, recusandae reprehenderit rerum similique suscipit?</p>
+
     </>
   )
 }
